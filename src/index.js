@@ -1,41 +1,32 @@
-require("dotenv/config");
-// var studentService = require("./student-service"); This is to use the functions in student - service.js
-const cors = require("cors");
-const express = require("express");
-
-const uri = process.env.DATABASE_URI;
-const example = require("./student-service");
-const app = express();
-const mongodb = require("mongodb");
-
-const ObjectID = mongodb.ObjectID;
-const client = new mongodb.MongoClient(uri, { useUnifiedTopology: true });
-
-// app.use(express.json());
-// app.use("/example", example)
-
-const bodyParser = require("body-parser");
-
-const dotenv = require("dotenv");
+const express = require('express');
+const mongodb = require('mongodb');
+const dotenv = require('dotenv');
+const bodyParser = require('body-parser');
+var randomWords = require('random-words');
+require('dotenv/config');
+const cors = require('cors');
 dotenv.config();
 
-const PORT = process.env.PORT || 9000;
+const URI = process.env.DATABASE_URI;
+const ObjectID = mongodb.ObjectID;
+const client = new mongodb.MongoClient(URI, { useUnifiedTopology: true });
+
+const app = express();
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-var randomWords = require("random-words");
 
 // app.use(studentService); This is to use the functions in student-service.js
 
-app.get("/", (req, res) => {
-  res.send("<h2>You can search the students now!</h2>");
+app.get('/', (req, res) => {
+  res.send('<h2>You can search the students now!</h2>');
 });
 
 // https://syllabus.codeyourfuture.io/
 
-app.get("/abc", (req, res) => {
-  res.status(301).redirect("https://syllabus.codeyourfuture.io");
+app.get('/abc', (req, res) => {
+  res.status(301).redirect('https://syllabus.codeyourfuture.io');
 
   // if (req.url == "/abc") {
   //   res.writeHead(301, {
@@ -45,45 +36,45 @@ app.get("/abc", (req, res) => {
   // }
 });
 
-app.get("/attendance/student", function (req, res) {
+app.get('/attendance/student', function (req, res) {
   let filter = {};
 
   if (req.query.location) {
-    filter["class_code.location._id"] = new ObjectID(req.query.location);
+    filter['class_code.location._id'] = new ObjectID(req.query.location);
   }
 
   if (req.query.group) {
-    filter["class_code.group._id"] = new ObjectID(req.query.group);
+    filter['class_code.group._id'] = new ObjectID(req.query.group);
   }
 
   if (req.query.type) {
-    filter["class_code.type"] = req.query.type;
+    filter['class_code.type'] = req.query.type;
   }
 
   if (req.query.module) {
-    filter["class_code.syllabus._id"] = new ObjectID(req.query.module);
+    filter['class_code.syllabus._id'] = new ObjectID(req.query.module);
   }
 
   if (req.query.lesson) {
-    filter["class_code.lesson._id"] = new ObjectID(req.query.lesson);
+    filter['class_code.lesson._id'] = new ObjectID(req.query.lesson);
   }
 
   client
-    .db("attendance")
-    .collection("students")
+    .db('attendance')
+    .collection('students')
     .find(filter)
     .toArray()
     .then((locations) => res.status(200).send(locations).end())
     .catch((error) => res.status(500).send(error).end());
 });
 
-// ------------------------Student Attendance History
-app.get("/studentsView/history", function (req, res) {
+//Student Attendance History-------------------------------------------------------------------------------------
+app.get('/studentsView/history', function (req, res) {
   // const searchObject = {email: req.query.email};
 
   client
-    .db("attendance")
-    .collection("students")
+    .db('attendance')
+    .collection('students')
     // .filter((user) => user.email === searchObject)
     .find({ email: { $eq: req.query.email } })
     .toArray(function (error, tracks) {
@@ -92,33 +83,32 @@ app.get("/studentsView/history", function (req, res) {
 });
 
 // create a  /attendance page which includes a form. Our form allow students to enter: Name, Email Address, Date
-app.post("/attendance", (req, res) => {
-  const admindb = client.db("admins");
-
-  admindb
-    .collection("code")
+app.post('/attendance', (req, res) => {
+  client
+    .db('admins')
+    .collection('code')
     .findOne({ code: { $eq: req.body.code } })
 
     .then(function (result) {
       if (!result) {
-        return Promise.reject(new Error("Invalid code"));
+        return Promise.reject(new Error('Invalid code'));
       }
 
       return result;
     })
 
     .then((result) => {
-      const db = client.db("attendance");
-      const collection = db.collection("students");
+      const db = client.db('attendance');
+      const collection = db.collection('students');
       let today = new Date();
       let date =
         today.getFullYear() +
-        "-" +
+        '-' +
         (today.getMonth() + 1) +
-        "-" +
+        '-' +
         today.getDate();
       let time =
-        today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
 
       const addAttendance = {
         name: req.body.name,
@@ -137,7 +127,7 @@ app.post("/attendance", (req, res) => {
       };
 
       return admindb
-        .collection("code")
+        .collection('code')
         .findOneAndUpdate(
           { _id: { $eq: result._id } },
           { $push: { attendees: addAttendance } }
@@ -152,22 +142,22 @@ app.post("/attendance", (req, res) => {
     });
 });
 
-// location--------------------------
+// location--------------------------------------------------------------------------------------------------------------------------
 
-app.get("/location", function (req, res) {
+app.get('/location', function (req, res) {
   client
-    .db("admins")
-    .collection("location")
+    .db('admins')
+    .collection('location')
     .find({})
     .toArray()
-    .then((locations) => res.status(200).send(locations).end())
+    .then((locations) => res.status(200).send(locations))
     .catch((error) => res.status(500).send(error).end());
 });
 
-app.post("/location", function (req, res) {
+app.post('/location', function (req, res) {
   client
-    .db("admins")
-    .collection("location")
+    .db('admins')
+    .collection('location')
     .insertOne({
       name: req.body.name,
       groups: [],
@@ -175,41 +165,41 @@ app.post("/location", function (req, res) {
     .then((result) => res.status(200).send(result.ops[0]).end());
 });
 
-app.delete("/location/:id", function (req, res) {
+app.delete('/location/:id', function (req, res) {
   const id = new mongodb.ObjectID(req.params.id);
   const searchObject = { _id: id };
   client
-    .db("admins")
-    .collection("location")
+    .db('admins')
+    .collection('location')
     .deleteOne(searchObject)
     .then((location) => res.status(200).send(location).end())
     .catch((error) => res.status(500).send(error).end());
 });
 
-app.get("/location/:id", function (req, res) {
+app.get('/location/:id', function (req, res) {
   // id = {id: mongodb.ObjectID(req.params.id)};
   // var id = new ObjectID(req.params.id);
 
   const id = new mongodb.ObjectID(req.params.id);
   const searchObject = { _id: id };
   client
-    .db("admins")
-    .collection("location")
+    .db('admins')
+    .collection('location')
     .findOne(searchObject)
     .then((location) => res.status(200).send(location).end())
     .catch((error) => res.status(500).send(error).end());
 });
 
-app.delete("/location/:id/group/:groupId", function (req, res) {
+app.delete('/location/:id/group/:groupId', function (req, res) {
   const id = new mongodb.ObjectID(req.params.id);
   const groupId = new mongodb.ObjectID(req.params.groupId);
 
-  console.log("location, group", id, groupId);
+  console.log('location, group', id, groupId);
 
   const searchObject = { _id: id };
   client
-    .db("admins")
-    .collection("location")
+    .db('admins')
+    .collection('location')
     .findOne(searchObject)
     .then((location) => {
       const newGroups = location.groups.filter(
@@ -220,8 +210,8 @@ app.delete("/location/:id/group/:groupId", function (req, res) {
       //console.log(location);
 
       client
-        .db("admins")
-        .collection("location")
+        .db('admins')
+        .collection('location')
         .updateOne(searchObject, { $set: { groups: newGroups } })
         .then((result) => res.status(200).send(result).end())
         .catch((error) => res.status(500).send(error).end());
@@ -230,12 +220,12 @@ app.delete("/location/:id/group/:groupId", function (req, res) {
     .catch((error) => res.status(500).send(error).end());
 });
 
-app.delete("/location/:id", function (req, res) {
+app.delete('/location/:id', function (req, res) {
   const id = new mongodb.ObjectID(req.params.id);
   const searchObject = { _id: id };
   client
-    .db("admins")
-    .collection("location")
+    .db('admins')
+    .collection('location')
     // .deleteOne(searchObject)
 
     // .then((result) => res.status(200).send(result).end())
@@ -252,12 +242,12 @@ app.delete("/location/:id", function (req, res) {
     });
 });
 
-app.post("/location/:id/group", function (req, res) {
+app.post('/location/:id/group', function (req, res) {
   var group = { _id: new ObjectID(), name: req.body.name };
 
   client
-    .db("admins")
-    .collection("location")
+    .db('admins')
+    .collection('location')
     .findOneAndUpdate(
       // search operation
       { _id: { $eq: new ObjectID(req.params.id) } },
@@ -270,81 +260,78 @@ app.post("/location/:id/group", function (req, res) {
 });
 
 //shows all classes
-app.get("/admins", function (req, res) {
+app.get('/admins', function (req, res) {
   client
-    .db("admins")
-    .collection("code")
+    .db('admins')
+    .collection('code')
     .find()
     .toArray((error, tracks) => {
       res.send(error || tracks);
     });
 });
 
-// get single class
-app.get("/admins/:id", function (req, res) {
+// get single class-----------------------------------------------------------------------------------------------------------------
+app.get('/admins/:id', function (req, res) {
   client
-    .db("admins")
-    .collection("code")
+    .db('admins')
+    .collection('code')
     .findOne({ _id: { $eq: new ObjectID(req.params.id) } })
     .then((result) => res.status(200).send(result).end())
     .catch((error) => res.status(500).send(error.message).end());
 });
 //get single location class
 
-//creates classes with code
-app.post("/admins", (req, res) => {
+//creates classes with code--------------------------------------------------------------------------------------------------------
+app.post('/admins', (req, res) => {
   const classCode = {
     location: {
-      _id: new ObjectID(req.body.location._id),
+      _id: new ObjectID(),
       name: req.body.location.name,
     },
     group: {
-      _id: new ObjectID(req.body.group._id),
+      _id: new ObjectID(),
       name: req.body.group.name,
     },
     type: req.body.type,
-    date: new Date(req.body.date + " " + req.body.time),
+    date: new Date(req.body.date + ' ' + req.body.time),
     time: req.body.time,
-    code: randomWords({ exactly: 2, join: " " }),
+    code: randomWords({ exactly: 2, join: ' ' }),
     syllabus: {
-      _id: new ObjectID(req.body.syllabus._id),
+      _id: new ObjectID(),
       module: req.body.syllabus.module,
     },
     lesson: {
-      _id: new ObjectID(req.body.lesson._id),
+      _id: new ObjectID(),
       name: req.body.lesson.name,
     },
   };
 
   client
-    .db("admins")
-    .collection("code")
+    .db('admins')
+    .collection('code')
     .insertOne(classCode)
     .then((result) =>
-      res
-        .status(200)
-        .send({ _id: result.ops[0]._id, ...classCode })
-        .end()
+      res.status(200).send({ _id: result.ops[0]._id, ...classCode })
     )
     .catch((error) => res.status(500).send(error.message).end());
 });
 
-//syllabus -------------------------------
+//syllabus -------------------------------------------------------------------------------------------------------------------
 
-app.get("/syllabus", function (req, res) {
+app.get('/syllabus', function (req, res) {
   client
-    .db("admins")
-    .collection("syllabus")
+    .db('admins')
+    .collection('syllabus')
     .find({})
     .toArray()
-    .then((syllabus) => res.status(200).send(syllabus).end())
-    .catch((error) => res.status(500).send(error).end());
+    .then((syllabus) => res.status(200).send(syllabus))
+    .catch((error) => res.status(500).send(error));
 });
 
-app.post("/syllabus", function (req, res) {
+app.post('/syllabus', function (req, res) {
   client
-    .db("admins")
-    .collection("syllabus")
+    .db('admins')
+    .collection('syllabus')
     .insertOne({
       module: req.body.module,
       lesson: [],
@@ -352,12 +339,12 @@ app.post("/syllabus", function (req, res) {
     .then((result) => res.status(200).send(result.ops[0]).end());
 });
 
-app.post("/syllabus/:id/lesson", function (req, res) {
+app.post('/syllabus/:id/lesson', function (req, res) {
   var lesson = { _id: new ObjectID(), name: req.body.name };
 
   client
-    .db("admins")
-    .collection("syllabus")
+    .db('admins')
+    .collection('syllabus')
     .findOneAndUpdate(
       // search operation
       { _id: { $eq: new ObjectID(req.params.id) } },
@@ -371,26 +358,26 @@ app.post("/syllabus/:id/lesson", function (req, res) {
 
 //delete Module
 
-app.delete("/admin/syllabus/:id", function (req, res) {
+app.delete('/admin/syllabus/:id', function (req, res) {
   const id = new mongodb.ObjectID(req.params.id);
   const searchObject = { _id: id };
   client
-    .db("admins")
-    .collection("syllabus")
+    .db('admins')
+    .collection('syllabus')
     .deleteOne(searchObject)
     .then((result) => res.status(200).send(result).end())
     .catch((error) => res.status(500).send(error).end());
 });
 
 //delete lesson-------------
-app.delete("/syllabus/:id/lesson/:lessonId", function (req, res) {
+app.delete('/syllabus/:id/lesson/:lessonId', function (req, res) {
   const id = new mongodb.ObjectID(req.params.id);
   const lessonId = new mongodb.ObjectID(req.params.lessonId);
 
   const searchObject = { _id: id };
   client
-    .db("admins")
-    .collection("syllabus")
+    .db('admins')
+    .collection('syllabus')
     .findOne(searchObject)
     .then((module) => {
       const newLessons = module.lesson.filter(
@@ -401,8 +388,8 @@ app.delete("/syllabus/:id/lesson/:lessonId", function (req, res) {
       //console.log(location);
 
       client
-        .db("admins")
-        .collection("syllabus")
+        .db('admins')
+        .collection('syllabus')
         .updateOne(searchObject, { $set: { lesson: newLessons } })
         .then((result) => res.status(200).send(result).end())
         .catch((error) => res.status(500).send(error).end());
@@ -411,8 +398,11 @@ app.delete("/syllabus/:id/lesson/:lessonId", function (req, res) {
     .catch((error) => res.status(500).send(error).end());
 });
 
-//outh
-app.post("/login/create-user", function (req, res) {
+//Define routes
+// app.use('/login/create-user', require('./routes/auth'));
+
+//Authentication----------------------------------------------------------------------------------------------------------------------
+app.post('/login/create-user', function (req, res) {
   var userParam = {
     socialId: req.body.socialId,
     displayName: req.body.displayName,
@@ -420,68 +410,67 @@ app.post("/login/create-user", function (req, res) {
   };
 
   client
-    .db("admins")
-    .collection("user")
-    .findOne(
-      // search operation
-      { email: userParam.email }
-    )
+    .db('admins')
+    .collection('user')
+    .findOne({ email: userParam.email })
     .then((user) => {
       if (user) {
-        return res.status(200).send(user).end();
+        return res.status(200).send(user);
       }
       user = {};
       user.email = userParam.email;
       user.name = userParam.displayName;
-      user.role = "student";
-      user.password = "";
+      user.role = 'student';
+      user.password = '';
       client
-        .db("admins")
-        .collection("user")
+        .db('admins')
+        .collection('user')
         .insertOne(user)
-        .then((result) => res.status(200).send(user).end())
-        .catch((error) => res.status(500).send(error).end());
+        .then((result) => res.status(200).send(user))
+        .catch((error) => res.status(500).send(error));
     })
-
-    .catch((error) => res.status(500).send(error).end());
+    .catch((error) => res.status(500).send(error));
 });
 
 //-------------------------------------
-app.get("/admin/users", function (req, res) {
+app.get('/admin/users', function (req, res) {
   client
-    .db("admins")
-    .collection("user")
+    .db('admins')
+    .collection('user')
     .find({})
     .toArray()
     .then((user) => res.status(200).send(user).end())
     .catch((error) => res.status(500).send(error).end());
 });
 
-app.post("/admin/users/:id", function (req, res) {
+app.post('/admin/users/:id', function (req, res) {
   client
-    .db("admins")
-    .collection("user")
+    .db('admins')
+    .collection('user')
     .findOneAndUpdate(
       { _id: new ObjectID(req.params.id) },
       { $set: { role: req.body.role } }
     )
-    .then((user) => res.status(200).send(user).end())
-    .catch((error) => res.status(500).send(error).end());
+    .then((user) => res.status(200).send(user))
+    .catch((error) => res.status(500).send(error));
 });
 
-app.delete("/admin/users/:id", function (req, res) {
+app.delete('/admin/users/:id', function (req, res) {
   const id = new mongodb.ObjectID(req.params.id);
   const searchObject = { _id: id };
   client
-    .db("admins")
-    .collection("user")
+    .db('admins')
+    .collection('user')
     .deleteOne(searchObject)
-    .then((user) => res.status(200).send(user).end())
-    .catch((error) => res.status(500).send(error).end());
+    .then((user) => res.status(200).send(user))
+    .catch((error) => res.status(500).send(error));
 });
 
+//----------------------------------connected to database
 client
   .connect()
   .then(() =>
     app.listen(PORT, () => console.log(`server started on port ${PORT}`))
   );
+
+const PORT = process.env.PORT || 9000;
