@@ -12,7 +12,7 @@ const DeleteModule = ({ props }) => {
         ? process.env.REACT_APP_PROD_API_URL
         : process.env.REACT_APP_LOCAL_API_URL;
 
-    fetch(`${apiBaseUrl}/admin/syllabus/${props.id}`, {
+    fetch(`${apiBaseUrl}/syllabus/admin/${props.id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
