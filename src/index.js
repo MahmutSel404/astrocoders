@@ -28,7 +28,7 @@ app.use('/location', require('./routes/location'));
 app.use('/attendance/student', require('./routes/attendeeList'));
 app.use('/admins', require('./routes/classes'));
 
-//connected to database--------------------------------------------------------------------------------------------------
+
 
 client
   .connect()
