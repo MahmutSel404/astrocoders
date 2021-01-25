@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useContext } from "react";
-import "../App.css";
-import { UserContext } from "../providers/UserProvider";
-import StudentsNavbar from "../navbar/StudentsNavbar";
+import React, { useState, useEffect, useContext } from 'react';
+import '../App.css';
+import { UserContext } from '../providers/UserProvider';
+import StudentsNavbar from '../navbar/StudentsNavbar';
 
 const StudentViewHistory = (props) => {
   const user = useContext(UserContext);
-  const [students, setStudents] = useState("");
+  const [students, setStudents] = useState('');
 
   const email = user && user.email;
-
+  
   useEffect(() => {
     const apiBaseUrl =
-      process.env.NODE_ENV === "production"
+      process.env.NODE_ENV === 'production'
         ? process.env.REACT_APP_PROD_API_URL
         : process.env.REACT_APP_LOCAL_API_URL;
 
@@ -24,35 +24,35 @@ const StudentViewHistory = (props) => {
   }, [email]);
 
   return (
-    <div className="same-background">
+    <div className='same-background'>
       <div>
         <StudentsNavbar
-          background="#aaa"
-          hoverBackground="#ccc"
-          linkColor="#eee"
+          background='#aaa'
+          hoverBackground='#ccc'
+          linkColor='#eee'
         />
       </div>
-      <div className="text-white text-center">
-        <h1 className="padding-top-bottom">{user.name}'s Attendance History</h1>
+      <div className='text-white text-center'>
+        <h1 className='padding-top-bottom'>{user.name}'s Attendance History</h1>
       </div>
       <div>
         {email ? (
-          <div className="table">
-            <table className="table table-striped container bg-white table-hover mx-auto">
+          <div className='table'>
+            <table className='table table-striped container bg-white table-hover mx-auto'>
               <thead>
                 <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Name</th>
-                  <th scope="col">Email</th>
-                  <th scope="col">Location</th>
-                  <th scope="col">Group</th>
-                  <th scope="col">Type</th>
-                  <th scope="col">Module</th>
-                  <th scope="col">Lesson</th>
-                  <th scope="col">Date</th>
-                  <th scope="col">Time</th>
-                  <th scope="col">Code</th>
-                  <th scope="col">Notes</th>
+                  <th scope='col'>#</th>
+                  <th scope='col'>Name</th>
+                  <th scope='col'>Email</th>
+                  <th scope='col'>Location</th>
+                  <th scope='col'>Group</th>
+                  <th scope='col'>Type</th>
+                  <th scope='col'>Module</th>
+                  <th scope='col'>Lesson</th>
+                  <th scope='col'>Date</th>
+                  <th scope='col'>Time</th>
+                  <th scope='col'>Code</th>
+                  <th scope='col'>Notes</th>
                 </tr>
               </thead>
               {students ? (

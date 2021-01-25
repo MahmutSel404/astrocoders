@@ -2,14 +2,15 @@ const express = require('express');
 const mongodb = require('mongodb');
 const router = express.Router();
 
-//Student Attendance History-------------------------------------------------------------------------------------
+
+//@route    GET /studentsView/history
+//desc      attendance history of stude
+
 router.get('/', function (req, res) {
-  // const searchObject = {email: req.query.email};
 
   client
     .db('attendance')
     .collection('students')
-    // .filter((user) => user.email === searchObject)
     .find({ email: { $eq: req.query.email } })
     .toArray(function (error, tracks) {
       res.send(error || tracks);

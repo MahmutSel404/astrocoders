@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from "react";
-import "../App.css";
-import LocationSelect from "../admin/LocationSelect";
-import GroupSelect from "../admin/GroupSelect";
-import TypeSelect from "../admin/TypeSelect";
-import ModuleSelect from "../admin/ModuleSelect";
-import ModuleLessonSelect from "../admin/ModuleLessonSelect";
-
-import qs from "query-string";
-import AdminNavbar from "../navbar/AdminNavbar";
+import React, { useState, useEffect } from 'react';
+import LocationSelect from '../admin/LocationSelect';
+import GroupSelect from '../admin/GroupSelect';
+import TypeSelect from '../admin/TypeSelect';
+import ModuleSelect from '../admin/ModuleSelect';
+import ModuleLessonSelect from '../admin/ModuleLessonSelect';
+import AdminNavbar from '../navbar/AdminNavbar';
+import qs from 'query-string';
+import '../App.css';
 
 const AttendeeList = () => {
-  const [students, setStudents] = useState("");
+  const [students, setStudents] = useState('');
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [selectedType, setSelectedType] = useState(null);
   const [selectedModule, setSelectedModule] = useState(null);
   const [selectedLesson, setSelectedLesson] = useState(null);
-  const [searchInput, setSearchInput] = useState("");
-  const [filteredStudents, setFilteredStudents] = useState("");
+  const [searchInput, setSearchInput] = useState('');
+  const [filteredStudents, setFilteredStudents] = useState('');
+
   useEffect(() => {
     const apiBaseUrl =
-      process.env.NODE_ENV === "production"
+      process.env.NODE_ENV === 'production'
         ? process.env.REACT_APP_PROD_API_URL
         : process.env.REACT_APP_LOCAL_API_URL;
     fetch(
@@ -47,10 +47,10 @@ const AttendeeList = () => {
     selectedLesson,
   ]);
   const search = (searchVal) => {
-    if (searchVal !== "") {
+    if (searchVal !== '') {
       setFilteredStudents(
         students.filter((person) =>
-          (person.name || "").toLowerCase().includes(searchVal.toLowerCase())
+          (person.name || '').toLowerCase().includes(searchVal.toLowerCase())
         )
       );
     } else {
@@ -63,14 +63,14 @@ const AttendeeList = () => {
   };
 
   return (
-    <div className="same-background">
-      <AdminNavbar background="#aaa" hoverBackground="#ddd" linkColor="#eee" />
-      <div className="text-center" style={{ paddingTop: "95px" }}>
-        <h3 className="text-white">Attendee List</h3>
+    <div className='same-background'>
+      <AdminNavbar background='#aaa' hoverBackground='#ddd' linkColor='#eee' />
+      <div className='text-center' style={{ paddingTop: '95px' }}>
+        <h3 className='text-white'>Attendee List</h3>
       </div>
 
-      <div className="list-jumbotron">
-        <div className="col-md-2 col-sm-12">
+      <div className='list-jumbotron'>
+        <div className='col-md-2 col-sm-12'>
           <LocationSelect
             selectedLocation={selectedLocation}
             setSelectedLocation={(value) => {
@@ -79,17 +79,17 @@ const AttendeeList = () => {
             }}
           />
         </div>
-        <div className="col-sm-12 col-md-2">
+        <div className='col-sm-12 col-md-2'>
           <GroupSelect
             selectedLocation={selectedLocation}
             selectedGroup={selectedGroup}
             setSelectedGroup={setSelectedGroup}
           />
         </div>
-        <div className="col-sm-12 col-md-2">
+        <div className='col-sm-12 col-md-2'>
           <TypeSelect type={selectedType} setType={setSelectedType} />
         </div>
-        <div className="col-sm-12 col-md-2">
+        <div className='col-sm-12 col-md-2'>
           <ModuleSelect
             selectedModule={selectedModule}
             setSelectedModule={(value) => {
@@ -98,21 +98,21 @@ const AttendeeList = () => {
             }}
           />
         </div>
-        <div className="col-sm-12 col-md-2">
+        <div className='col-sm-12 col-md-2'>
           <ModuleLessonSelect
             selectedModule={selectedModule}
             selectedLesson={selectedLesson}
             setSelectedLesson={setSelectedLesson}
           />
         </div>
-        <div className="col-sm-12 col-md-2">
-          <form className="form-group search-box">
-            <label htmlFor="studentName">Student Name</label>
+        <div className='col-sm-12 col-md-2'>
+          <form className='form-group search-box'>
+            <label htmlFor='studentName'>Student Name</label>
             <input
-              type="text"
-              id="customerName"
-              className="form-control"
-              placeholder="Search student name or surname "
+              type='text'
+              id='customerName'
+              className='form-control'
+              placeholder='Search student name or surname '
               value={searchInput}
               onChange={handleSearchInput}
             />
@@ -121,14 +121,14 @@ const AttendeeList = () => {
       </div>
 
       {filteredStudents ? (
-        <div className="wrapper">
+        <div className='wrapper'>
           {filteredStudents.map((data, i) => {
             return (
-              <div key={i} className="container">
-                <div className="row">
-                  <div className="col-sm-4 col-md-4">
-                    <div className="card">
-                      <div className="card-body">
+              <div key={i} className='container'>
+                <div className='row'>
+                  <div className='col-sm-4 col-md-4'>
+                    <div className='card'>
+                      <div className='card-body'>
                         <h5>{data.name ? data.name : null}</h5>
                         <p>{data.email ? data.email : null}</p>
 
@@ -147,9 +147,9 @@ const AttendeeList = () => {
                     </div>
                   </div>
 
-                  <div className="col-sm-4 col-md-3">
-                    <div className="card">
-                      <div className="card-body">
+                  <div className='col-sm-4 col-md-3'>
+                    <div className='card'>
+                      <div className='card-body'>
                         <h5>Group Details</h5>
                         <hr></hr>
 
@@ -171,9 +171,9 @@ const AttendeeList = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="col-sm-4 col-md-3">
-                    <div className="card">
-                      <div className="card-body">
+                  <div className='col-sm-4 col-md-3'>
+                    <div className='card'>
+                      <div className='card-body'>
                         <h5>Class Details</h5>
                         <hr></hr>
 
@@ -183,9 +183,9 @@ const AttendeeList = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="col-sm-4 col-md-2">
-                    <div className="card">
-                      <div className="card-body">
+                  <div className='col-sm-4 col-md-2'>
+                    <div className='card'>
+                      <div className='card-body'>
                         <h5>Notes</h5>
                         <hr></hr>
 

@@ -3,7 +3,9 @@ const mongodb = require('mongodb');
 const router = express.Router();
 var randomWords = require('random-words');
 
-//creates classes with code--------------------------------------------------------------------------------------------------------
+//@route    POST /admins
+//desc      create unique, random and meaningful class code 
+
 router.post('/', (req, res) => {
   const classCode = {
     location: {
