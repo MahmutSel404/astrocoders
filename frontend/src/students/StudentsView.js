@@ -5,11 +5,10 @@ import { useUserProfile } from "../providers/UserProvider";
 
 const StudentsView = (props) => {
   const user = useUserProfile();
-  // console.log(user);
+
   const [code, setCode] = useState("");
   const [notes, setNotes] = useState("");
-  // const [name, setName]= useState("");
-  // const [email, setEmail] = useState("");
+ 
 
   const name = user.name;
   const email = user.email;
@@ -19,9 +18,7 @@ const StudentsView = (props) => {
       ? process.env.REACT_APP_PROD_API_URL
       : process.env.REACT_APP_LOCAL_API_URL;
 
-  //  const setName =()=>{
-  //   name.displayName
-  //   }
+  
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -64,7 +61,7 @@ const StudentsView = (props) => {
           <div className="text-center pb-5">
             <h1>Attend Class</h1>
             <hr style={{ color: "white" }}></hr>
-            <h5 style={{ color: "white" }}> Welcome {user.name}</h5>
+            <h5 style={{ color: "white" }}> Welcome {name}</h5>
           </div>
           <form className="create-code-container" onSubmit={handleSubmit}>
             <div className="form-group mx-5">

@@ -2,7 +2,8 @@ const express = require('express');
 const mongodb = require('mongodb');
 const router = express.Router();
 
-//-------------------------------------
+//@route    GET admin/users
+//desc      get user
 router.get('/', function (req, res) {
   client
     .db('admins')
@@ -13,6 +14,8 @@ router.get('/', function (req, res) {
     .catch((error) => res.status(500).send(error).end());
 });
 
+//@route    PUT admin/users
+//desc      update user
 router.post('/:id', function (req, res) {
   client
     .db('admins')
@@ -25,6 +28,8 @@ router.post('/:id', function (req, res) {
     .catch((error) => res.status(500).send(error));
 });
 
+//@route    DELETE admin/users
+//desc      delete user
 router.delete('/:id', function (req, res) {
   const id = new mongodb.ObjectID(req.params.id);
   const searchObject = { _id: id };

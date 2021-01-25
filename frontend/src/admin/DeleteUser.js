@@ -24,7 +24,6 @@ const DeleteUser = ({ props }) => {
         Swal.fire(
           "Success!",
           "The user has been deleted",
-
           "success"
         );
         // props.history.push("/");
@@ -42,9 +41,6 @@ const DeleteUser = ({ props }) => {
     <div className="">
       <div className="">
         <FaTrashAlt color="purple" size="1.1rem" onClick={handleSubmit} />
-        {/* <button className="btn btn-sm btn-warning" onClick={handleSubmit}> */}
-        {/* Delete
-        </button> */}
       </div>
     </div>
   );

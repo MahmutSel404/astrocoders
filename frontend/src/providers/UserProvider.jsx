@@ -9,6 +9,7 @@ const UserProvider = (props) => {
     process.env.NODE_ENV === "production"
       ? process.env.REACT_APP_PROD_API_URL
       : process.env.REACT_APP_LOCAL_API_URL;
+      
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -40,7 +41,7 @@ const UserProvider = (props) => {
   }, [apiBaseUrl]);
 
   if (loading) return <div>Please wait..</div>;
-  console.log(user);
+
   return (
     <UserContext.Provider value={user}>{props.children}</UserContext.Provider>
   );

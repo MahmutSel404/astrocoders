@@ -3,11 +3,10 @@ const mongodb = require('mongodb');
 const router = express.Router();
 
 //@route    POST login/create-user
-//desc      auth user
+//desc      authenticate user 
 
 router.post('/', function (req, res) {
-  var userParam = {
-    socialId: req.body.socialId,
+  const userParam = {
     displayName: req.body.displayName,
     email: req.body.email,
   };

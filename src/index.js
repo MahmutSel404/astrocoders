@@ -7,7 +7,6 @@ const cors = require('cors');
 dotenv.config();
 
 const URI = process.env.DATABASE_URI;
-const ObjectID = mongodb.ObjectID;
 const client = new mongodb.MongoClient(URI, { useUnifiedTopology: true });
 const PORT = process.env.PORT || 9000;
 
@@ -21,12 +20,11 @@ app.use(bodyParser.json());
 app.use('/login/create-user', require('./routes/auth'));
 app.use('/admin/users', require('./routes/userProfiles'));
 app.use('/admins', require('./routes/classCode'));
-app.use('/syllabus', require('./routes/syllabus'));
 app.use('/attendance', require('./routes/attendClass'));
 app.use('/studentsView/history', require('./routes/attendanceHistory'));
+app.use('/syllabus', require('./routes/syllabus'));
 app.use('/location', require('./routes/location'));
 app.use('/attendance/student', require('./routes/attendeeList'));
-app.use('/admins', require('./routes/classes'));
 
 
 
